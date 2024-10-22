@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.protect = exports.logUserActivity = exports.deleteUser = exports.resetPassword = exports.forgotPassword = exports.changePassword = exports.updateUser = exports.getUser = exports.login = exports.signinWithGoogle = exports.signup = void 0;
-const util_1 = __importDefault(require("util"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const crypto_1 = __importDefault(require("crypto"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
@@ -370,11 +369,13 @@ exports.protect = (0, asyncErrorHandler_1.default)(async (req, res, next) => {
     }
     if (token && token.startsWith("bearer")) {
         token = token.split(" ")[1];
-        // console.log("Token string: ", token);
     }
     // 2.Validate the token:
     // console.log("SECRET STR: ", process.env.SECRET_STR);
-    const decodedToken = await util_1.default.promisify(jsonwebtoken_1.default.verify)(token, process.env.SECRET_STR);
+    const decodedToken = jsonwebtoken_1.default.verify(token, process.env.SECRET_STR);
+    if (typeof decodedToken === "string") {
+        return next(new customError_1.default("Failed to verify token", 500));
+    }
     // console.log("DECODED TOKEN: ", decodedToken);
     // 3. Check if user exists, and was not deleted recently:
     const user = await userModel_1.UserModel.findById(decodedToken.id).select("+password");

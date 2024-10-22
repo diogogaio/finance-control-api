@@ -43,5 +43,5 @@ process.on("unhandledRejection", async (err) => {
     });
 });
 // Run mongodb locally:
-// connectToMongoMemoryServer()
+// connectToMongoMemoryServer();
 //# sourceMappingURL=server.js.map

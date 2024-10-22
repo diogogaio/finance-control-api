@@ -71,8 +71,8 @@ export const calculateTotals = async (queryObj: any, query: any) => {
     }
   });
 
-  //   console.log("totalsEachByIncomeTags", totalsByEachIncomeTags);
-  //   console.log("totalsByEachOutcomeTags", totalsByEachOutcomeTags);
+  // console.log("totalsEachByIncomeTags", totalsByEachIncomeTags);
+  // console.log("totalsByEachOutcomeTags", totalsByEachOutcomeTags);
 
   return {
     incomeTotal,

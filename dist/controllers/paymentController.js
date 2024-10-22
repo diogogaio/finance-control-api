@@ -5,8 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sessionStatus = exports.createCheckoutSession = void 0;
 const stripe_1 = __importDefault(require("stripe"));
-const asyncErrorHandler_1 = __importDefault(require("../utils/asyncErrorHandler"));
 const customError_1 = __importDefault(require("../utils/customError"));
+const asyncErrorHandler_1 = __importDefault(require("../utils/asyncErrorHandler"));
 exports.createCheckoutSession = (0, asyncErrorHandler_1.default)(async (req, res, next) => {
     const stripe = new stripe_1.default(process.env.STRIPE_SECRET_KEY);
     const { email } = req.body;

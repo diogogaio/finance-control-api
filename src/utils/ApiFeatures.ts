@@ -4,6 +4,7 @@ import { calculateTotals } from "./calculateTotals";
 interface QueryParams {
   [key: string]: any;
 }
+let transactionsCount: number;
 
 class ApiFeatures<T> {
   query: Query<T[], T>;
@@ -50,6 +51,13 @@ class ApiFeatures<T> {
             queryObj[key][operator] = new Date(queryObj[key][operator]);
           }
         }
+      } else if (key.includes("amount")) {
+        for (const operator in queryObj[key]) {
+          if (queryObj[key].hasOwnProperty(operator)) {
+            // Convert to Date object
+            queryObj[key][operator] = Number(queryObj[key][operator]);
+          }
+        }
       }
     }
 
@@ -62,6 +70,8 @@ class ApiFeatures<T> {
       totalsByEachIncomeTags,
       totalsByEachOutcomeTags,
     } = await calculateTotals(queryObj, this.query);
+
+    transactionsCount = count;
 
     return {
       count,
@@ -93,12 +103,18 @@ class ApiFeatures<T> {
     return this;
   }
   paginate() {
-    const page = this.queryParams.page
+    let page = this.queryParams.page
       ? parseInt(this.queryParams.page as string, 10)
       : 1;
-    const limit = this.queryParams.limit
-      ? parseInt(this.queryParams.limit as string, 10)
-      : Number(process.env.QUERY_LIMIT);
+
+    let limit = this.queryParams.limit;
+    if (limit) {
+      limit = limit.toLowerCase().includes("mostrar todos")
+        ? (limit = transactionsCount)
+        : Number(limit);
+    } else {
+      limit = Number(process.env.QUERY_LIMIT);
+    }
     const skip = (page - 1) * limit;
 
     this.query = this.query.skip(skip).limit(limit);

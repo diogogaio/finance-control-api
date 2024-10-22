@@ -20,7 +20,7 @@ const transactionRouter_1 = __importDefault(require("./routes/transactionRouter"
 // mongoose.set("debug", true);
 const app = (0, express_1.default)();
 const limiter = (0, express_rate_limit_1.rateLimit)({
-    windowMs: 60 * 24 * 60 * 1000, // 1 day
+    windowMs: 15 * 60 * 1000,
     limit: 101, // Limit each IP to 100 requests
     statusCode: 429,
     message: "Too many server request for a certain period, please try again later...",

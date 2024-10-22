@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const calculateTotals_1 = require("./calculateTotals");
+let transactionsCount;
 class ApiFeatures {
     constructor(query, queryParams, tenantId) {
         this.query = query;
@@ -32,9 +33,18 @@ class ApiFeatures {
                     }
                 }
             }
+            else if (key.includes("amount")) {
+                for (const operator in queryObj[key]) {
+                    if (queryObj[key].hasOwnProperty(operator)) {
+                        // Convert to Date object
+                        queryObj[key][operator] = Number(queryObj[key][operator]);
+                    }
+                }
+            }
         }
         this.query = this.query.find(queryObj);
         const { count, incomeTotal, outcomeTotal, totalsByEachIncomeTags, totalsByEachOutcomeTags, } = await (0, calculateTotals_1.calculateTotals)(queryObj, this.query);
+        transactionsCount = count;
         return {
             count,
             incomeTotal,
@@ -65,12 +75,18 @@ class ApiFeatures {
         return this;
     }
     paginate() {
-        const page = this.queryParams.page
+        let page = this.queryParams.page
             ? parseInt(this.queryParams.page, 10)
             : 1;
-        const limit = this.queryParams.limit
-            ? parseInt(this.queryParams.limit, 10)
-            : Number(process.env.QUERY_LIMIT);
+        let limit = this.queryParams.limit;
+        if (limit) {
+            limit = limit.toLowerCase().includes("mostrar todos")
+                ? (limit = transactionsCount)
+                : Number(limit);
+        }
+        else {
+            limit = Number(process.env.QUERY_LIMIT);
+        }
         const skip = (page - 1) * limit;
         this.query = this.query.skip(skip).limit(limit);
         return this;

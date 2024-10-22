@@ -75,6 +75,7 @@ const logErrorOnServer = async (interceptedAt, error, req = null) => {
             error: error?.message,
             createdAt: new Date(),
         });
+        console.log("Logged error: ", errorLog);
     }
     catch (error) {
         console.log("Not able to log error on server: ", error);

@@ -46,8 +46,8 @@ const calculateTotals = async (queryObj, query) => {
             totalsByEachIncomeTags[t._id.tag] = t.totalAmountByTag;
         }
     });
-    //   console.log("totalsEachByIncomeTags", totalsByEachIncomeTags);
-    //   console.log("totalsByEachOutcomeTags", totalsByEachOutcomeTags);
+    // console.log("totalsEachByIncomeTags", totalsByEachIncomeTags);
+    // console.log("totalsByEachOutcomeTags", totalsByEachOutcomeTags);
     return {
         incomeTotal,
         outcomeTotal,
