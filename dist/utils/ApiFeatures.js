@@ -55,13 +55,13 @@ class ApiFeatures {
         };
     }
     sort() {
-        if (this.queryParams.sort) {
-            const sortBy = this.queryParams.sort.split(",").join(" ");
-            this.query = this.query.sort(sortBy);
-        }
-        else {
-            this.query = this.query.sort("-createdAt");
-        }
+        /*
+        Consistent ordering with a secondary unique field (like _id) across all sorting criteria is a good practice. Duplicate entries across pages can occur with any non-unique field like amount, tag, or description. Mongoose can duplicate transactions across pages if their values are the same.
+        */
+        const sortBy = this.queryParams.sort
+            ? `${this.queryParams.sort.split(",").join(" ")} _id`
+            : "-createdAt -_id";
+        this.query = this.query.sort(sortBy);
         return this;
     }
     limitFields() {
@@ -88,6 +88,8 @@ class ApiFeatures {
             limit = Number(process.env.QUERY_LIMIT);
         }
         const skip = (page - 1) * limit;
+        console.log("SKIP: ", skip);
+        console.log("LIMIT: ", limit);
         this.query = this.query.skip(skip).limit(limit);
         return this;
     }
