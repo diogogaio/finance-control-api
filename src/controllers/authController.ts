@@ -142,6 +142,7 @@ export const signinWithGoogle = asyncErroHandler(
     const user = await UserModel.findOne({ email: email }).exec();
 
     if (user) {
+      console.log("Signed in with google account...");
       token = signToken(String(user._id), user.email);
       await logUserActivity("signUp-with-google", user, req);
       return res.status(200).json({
@@ -172,10 +173,12 @@ export const signinWithGoogle = asyncErroHandler(
 
     newUser.password = undefined;
 
+    console.log("Signed up with google...");
+
     return res.status(200).json({
       status: "success",
       token,
-      user: user,
+      user: newUser,
       newUser: true,
     });
   }
