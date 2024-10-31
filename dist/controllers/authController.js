@@ -102,6 +102,7 @@ exports.signinWithGoogle = (0, asyncErrorHandler_1.default)(async (req, res, nex
     // check for duplicate usernames in the db
     const user = await userModel_1.UserModel.findOne({ email: email }).exec();
     if (user) {
+        console.log("Signed in with google account...");
         token = signToken(String(user._id), user.email);
         await (0, exports.logUserActivity)("signUp-with-google", user, req);
         return res.status(200).json({
@@ -125,10 +126,11 @@ exports.signinWithGoogle = (0, asyncErrorHandler_1.default)(async (req, res, nex
     await (0, exports.logUserActivity)("signUp-with-google", newUser, req);
     token = signToken(String(newUser._id), newUser.email);
     newUser.password = undefined;
+    console.log("Signed up with google...");
     return res.status(200).json({
         status: "success",
         token,
-        user: user,
+        user: newUser,
         newUser: true,
     });
 });

@@ -21,7 +21,7 @@ const transactionRouter_1 = __importDefault(require("./routes/transactionRouter"
 const app = (0, express_1.default)();
 const limiter = (0, express_rate_limit_1.rateLimit)({
     windowMs: 15 * 60 * 1000,
-    limit: 101, // Limit each IP to 100 requests
+    limit: 200, // Limit each IP to 100 requests
     statusCode: 429,
     message: "Too many server request for a certain period, please try again later...",
 });
@@ -35,13 +35,17 @@ const corsOptions = {
     origin: (0, corsConfig_1.setOrigin)(),
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE, OPTIONS",
     allowedHeaders: "Authorization, Content-Type",
+    exposedHeaders: ["rate-limit-remaining"], //Expose this header so axios can intercept it in client side
     // credentials: true,
-    optionsSuccessStatus: 204,
 };
 // Use the CORS middleware
 app.use((0, cors_1.default)(corsOptions));
-// Handle preflight requests
-app.options("*", (0, cors_1.default)(corsOptions));
+//This middleware adds RateLimit-Remaining to all responses since I can't reach the default X-Rate-Limit header on client side
+app.use((req, res, next) => {
+    const rateLimitRemaining = res.get("x-ratelimit-remaining");
+    res.setHeader("rate-limit-remaining", rateLimitRemaining); // Set custom header
+    next();
+});
 app.use(express_1.default.json({ limit: "10kb" })); //Limit maximum request body data
 app.use(sanitize_1.default);
 // app.use(cookieParser()); // Middleware to parse cookies
