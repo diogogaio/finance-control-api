@@ -17,6 +17,9 @@ const configPath = path.resolve(__dirname, "../config.env");
 dotenv.config({ path: configPath });
 
 const port = Number(process.env.PORT) || 3000;
+const server = app.listen(port, () => {
+  console.log(`Server running on ${process.env.NODE_ENV} - PORT:${port}`);
+});
 
 mongoose
   .connect(process.env.CONN_STR || "")
@@ -26,10 +29,6 @@ mongoose
   .catch(() => {
     console.log("DB Connection Failed!");
   });
-
-const server = app.listen(port, () => {
-  console.log(`Server running on ${process.env.NODE_ENV} - PORT:${port}`);
-});
 
 // Handle any promise rejection that was not caught
 process.on("unhandledRejection", async (err: Error) => {

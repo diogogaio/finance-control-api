@@ -25,7 +25,11 @@ const limiter = rateLimit({
 
 //https://express-rate-limit.mintlify.app/guides/troubleshooting-proxy-issues
 // Solve the render.com proxies issue with rate limiter:
-app.set("trust proxy", 3);
+if (process.env.RENDER === "true") {
+  app.set("trust proxy", 3); // Render setup
+} else {
+  app.set("trust proxy", 1); // Nginx or local setup
+}
 
 // Apply the rate limiting middleware to all requests.
 app.use(limiter);
@@ -37,6 +41,7 @@ const corsOptions = {
   allowedHeaders: "Authorization, Content-Type",
   exposedHeaders: ["rate-limit-remaining"], //Expose this header so axios can intercept it in client side
   // credentials: true,
+  optionsSuccessStatus: 204,
 };
 
 // Use the CORS middleware
@@ -48,6 +53,8 @@ app.use((req, res, next) => {
   res.setHeader("rate-limit-remaining", rateLimitRemaining); // Set custom header
   next();
 });
+// Handle preflight requests
+app.options("*", cors(corsOptions));
 
 app.use(express.json({ limit: "10kb" })); //Limit maximum request body data
 app.use(sanitizeRequest);
