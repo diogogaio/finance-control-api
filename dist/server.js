@@ -30,7 +30,7 @@ mongoose_1.default
     console.log("DB Connection Successful!");
 })
     .catch(() => {
-    console.log("DB Connection Failed!");
+    console.log("DB Connection Failed!, Connection String: ", process.env.CONN_STR);
 });
 // Handle any promise rejection that was not caught
 process.on("unhandledRejection", async (err) => {
