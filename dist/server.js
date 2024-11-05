@@ -4,9 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = __importDefault(require("path"));
-dotenv_1.default.config({ path: "./../config" }); //must be at the top to load environment variables early
-const app_1 = __importDefault(require("./app"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const configPath = path_1.default.resolve(__dirname, "../config.env");
+dotenv_1.default.config({ path: configPath }); //must be at the top to load
+const app_1 = __importDefault(require("./app"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const controllers_1 = require("./controllers");
 // import { connectToMongoMemoryServer } from "./utils/mongoMemoryServer";
@@ -16,8 +17,6 @@ process.on("uncaughtException", async (err) => {
     console.log("Uncaught Exception occurred! Shutting down...");
     process.exit(1);
 });
-const configPath = path_1.default.resolve(__dirname, "../config.env");
-dotenv_1.default.config({ path: configPath });
 const port = Number(process.env.PORT) || 3000;
 const server = app_1.default.listen(port, "0.0.0.0", () => {
     console.log(`Server running on ${process.env.NODE_ENV} - PORT:${port}\n time:${new Date().toLocaleString("pt-BR", {

@@ -1,6 +1,8 @@
 import path from "path";
 import dotenv from "dotenv";
-dotenv.config({ path: "./../config" }); //must be at the top to load environment variables early
+const configPath = path.resolve(__dirname, "../config.env");
+dotenv.config({ path: configPath }); //must be at the top to load
+
 import app from "./app";
 import mongoose from "mongoose";
 import { logErrorOnServer } from "./controllers";
@@ -12,9 +14,6 @@ process.on("uncaughtException", async (err) => {
   console.log("Uncaught Exception occurred! Shutting down...");
   process.exit(1);
 });
-
-const configPath = path.resolve(__dirname, "../config.env");
-dotenv.config({ path: configPath });
 
 const port = Number(process.env.PORT) || 3000;
 const server = app.listen(port, "0.0.0.0", () => {
