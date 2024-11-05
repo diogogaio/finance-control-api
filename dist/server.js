@@ -24,14 +24,34 @@ const server = app_1.default.listen(port, "0.0.0.0", () => {
         timeZone: "America/Sao_Paulo",
     })}`);
 });
-mongoose_1.default
-    .connect(process.env.CONN_STR || "")
-    .then(() => {
-    console.log("DB Connection Successful!");
-})
-    .catch(() => {
-    console.log("DB Connection Failed!, Connection String: ", process.env.CONN_STR);
-});
+// mongoose
+//   .connect(process.env.CONN_STR || "")
+//   .then(() => {
+//     console.log("DB Connection Successful!");
+//   })
+//   .catch(() => {
+//     console.log(
+//       "DB Connection Failed!, Connection String: ",
+//       process.env.CONN_STR
+//     );
+//   });
+let count = 0;
+const connectWithRetry = () => {
+    mongoose_1.default
+        .connect(process.env.CONN_STR || "")
+        .then(() => {
+        console.log("DB Connection Successful!");
+    })
+        .catch((err) => {
+        console.log("DB Connection Failed. Retrying in 3 seconds...", err.message);
+        count++;
+        if (count > 5) {
+            console.log("Failed to connect after 5 attempts...");
+        }
+        setTimeout(connectWithRetry, 3000);
+    });
+};
+connectWithRetry();
 // Handle any promise rejection that was not caught
 process.on("unhandledRejection", async (err) => {
     console.log(err.name, err.message);
