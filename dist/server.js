@@ -19,7 +19,7 @@ process.on("uncaughtException", async (err) => {
 const configPath = path_1.default.resolve(__dirname, "../config.env");
 dotenv_1.default.config({ path: configPath });
 const port = Number(process.env.PORT) || 3000;
-const server = app_1.default.listen(port, () => {
+const server = app_1.default.listen(port, "0.0.0.0", () => {
     console.log(`Server running on ${process.env.NODE_ENV} - PORT:${port}`);
 });
 mongoose_1.default
