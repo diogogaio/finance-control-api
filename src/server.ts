@@ -1,8 +1,8 @@
 import path from "path";
-import app from "./app";
 import dotenv from "dotenv";
+dotenv.config({ path: "./../config" }); //must be at the top to load environment variables early
+import app from "./app";
 import mongoose from "mongoose";
-dotenv.config({ path: "./../config" });
 import { logErrorOnServer } from "./controllers";
 // import { connectToMongoMemoryServer } from "./utils/mongoMemoryServer";
 

@@ -4,10 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = __importDefault(require("path"));
+dotenv_1.default.config({ path: "./../config" }); //must be at the top to load environment variables early
 const app_1 = __importDefault(require("./app"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const mongoose_1 = __importDefault(require("mongoose"));
-dotenv_1.default.config({ path: "./../config" });
 const controllers_1 = require("./controllers");
 // import { connectToMongoMemoryServer } from "./utils/mongoMemoryServer";
 process.on("uncaughtException", async (err) => {
