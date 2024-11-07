@@ -70,9 +70,9 @@ app.use(sanitizeRequest);
 app.use(mongoSanitize());
 
 //Routes
-app.use("/api/v1/user", authRouter);
-app.use("/api/v1/transactions", transactionRouter);
-app.use("/api/v1/payments", paymentsRouter);
+app.use("/finance-api/v1/user", authRouter);
+app.use("/finance-api/v1/transactions", transactionRouter);
+app.use("/finance-api/v1/payments", paymentsRouter);
 app.all("*", (req, res, next) => {
   const err = new CustomError(
     `Can not find this URL on server: "${req.originalUrl}" `,

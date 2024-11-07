@@ -65,9 +65,9 @@ app.use(sanitize_1.default);
 // To remove data using these defaults:
 app.use((0, express_mongo_sanitize_1.default)());
 //Routes
-app.use("/api/v1/user", authRouter_1.default);
-app.use("/api/v1/transactions", transactionRouter_1.default);
-app.use("/api/v1/payments", paymentsRouter_1.default);
+app.use("/finance-api/v1/user", authRouter_1.default);
+app.use("/finance-api/v1/transactions", transactionRouter_1.default);
+app.use("/finance-api/v1/payments", paymentsRouter_1.default);
 app.all("*", (req, res, next) => {
     const err = new customError_1.default(`Can not find this URL on server: "${req.originalUrl}" `, 404);
     next(err);

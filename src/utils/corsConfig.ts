@@ -1,6 +1,8 @@
 export const setOrigin = () => {
   const productionURLs = [
     "https://accounts.google.com",
+
+    "http://localhost:5173",
     "https://equilibriofinanceiro.web.app", // Allow Google One Tap requests if needed
   ];
 
