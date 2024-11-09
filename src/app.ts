@@ -70,9 +70,14 @@ app.use(sanitizeRequest);
 app.use(mongoSanitize());
 
 //Routes
+
 app.use("/finance-api/v1/user", authRouter);
 app.use("/finance-api/v1/transactions", transactionRouter);
 app.use("/finance-api/v1/payments", paymentsRouter);
+// Ping endpoint under /finance-api/v1/
+app.get("/finance-api/v1/ping", (req, res) => {
+  res.status(200).json({ message: "pong" });
+});
 app.all("*", (req, res, next) => {
   const err = new CustomError(
     `Can not find this URL on server: "${req.originalUrl}" `,
