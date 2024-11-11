@@ -57,6 +57,12 @@ app.use((req, res, next) => {
 app.options("*", cors(corsOptions));
 
 app.use(express.json({ limit: "10kb" })); //Limit maximum request body data
+
+app.use((req, res, next) => {
+  console.log("BEFORE sanitizeRequest:", req.url);
+  next();
+});
+
 app.use(sanitizeRequest);
 // app.use(cookieParser()); // Middleware to parse cookies
 
@@ -68,6 +74,11 @@ app.use(sanitizeRequest);
 
 // To remove data using these defaults:
 app.use(mongoSanitize());
+
+app.use((req, res, next) => {
+  console.log("AFTER sanitizeRequest:", req.url);
+  next();
+});
 
 //Routes
 

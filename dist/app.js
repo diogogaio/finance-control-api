@@ -55,6 +55,10 @@ app.use((req, res, next) => {
 // Handle preflight requests
 app.options("*", (0, cors_1.default)(corsOptions));
 app.use(express_1.default.json({ limit: "10kb" })); //Limit maximum request body data
+app.use((req, res, next) => {
+    console.log("BEFORE sanitizeRequest:", req.url);
+    next();
+});
 app.use(sanitize_1.default);
 // app.use(cookieParser()); // Middleware to parse cookies
 // By default, $ and . characters are removed completely from user-supplied input in the following places:
@@ -64,10 +68,18 @@ app.use(sanitize_1.default);
 // - req.query
 // To remove data using these defaults:
 app.use((0, express_mongo_sanitize_1.default)());
+app.use((req, res, next) => {
+    console.log("AFTER sanitizeRequest:", req.url);
+    next();
+});
 //Routes
 app.use("/finance-api/v1/user", authRouter_1.default);
 app.use("/finance-api/v1/transactions", transactionRouter_1.default);
 app.use("/finance-api/v1/payments", paymentsRouter_1.default);
+// Ping endpoint under /finance-api/v1/
+app.get("/finance-api/v1/ping", (req, res) => {
+    res.status(200).json({ message: "pong" });
+});
 app.all("*", (req, res, next) => {
     const err = new customError_1.default(`Can not find this URL on server: "${req.originalUrl}" `, 404);
     next(err);
