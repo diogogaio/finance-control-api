@@ -28,18 +28,6 @@ const server = app.listen(port, "0.0.0.0", () => {
   );
 });
 
-// mongoose
-//   .connect(process.env.CONN_STR || "")
-//   .then(() => {
-//     console.log("DB Connection Successful!");
-//   })
-//   .catch(() => {
-//     console.log(
-//       "DB Connection Failed!, Connection String: ",
-//       process.env.CONN_STR
-//     );
-//   });
-
 let count = 0;
 
 const connectWithRetry = () => {

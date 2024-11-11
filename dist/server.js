@@ -24,17 +24,6 @@ const server = app_1.default.listen(port, "0.0.0.0", () => {
         timeZone: "America/Sao_Paulo",
     })}`);
 });
-// mongoose
-//   .connect(process.env.CONN_STR || "")
-//   .then(() => {
-//     console.log("DB Connection Successful!");
-//   })
-//   .catch(() => {
-//     console.log(
-//       "DB Connection Failed!, Connection String: ",
-//       process.env.CONN_STR
-//     );
-//   });
 let count = 0;
 const connectWithRetry = () => {
     mongoose_1.default
