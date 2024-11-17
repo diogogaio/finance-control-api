@@ -8,8 +8,8 @@
     "test": " exit 1",
     "dev": "nodemon",
     "start": "node dist/server.js",
-    "start_prod": "SET NODE_ENV=production& nodemon",
-    "start_dev": "SET NODE_ENV=development& nodemon"
+    "start_prod": "cross-env NODE_ENV=production nodemon",
+    "start_dev": "cross-env NODE_ENV=development nodemon"
   },
   "author": "Diogo Gaio",
   "license": "ISC",
@@ -21,6 +21,7 @@
     "@types/node-cron": "^3.0.11",
     "@types/nodemailer": "^6.4.16",
     "@types/validator": "^13.12.2",
+    "cross-env": "7.0.3",
     "mongodb-memory-server": "^9.4.1",
     "nodemon": "^3.1.4",
     "ts-node": "^10.9.2",
