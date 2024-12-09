@@ -1,6 +1,9 @@
+import fs from "fs";
+import path from "path";
 import cron from "node-cron";
 import { lastDayOfMonth, sub } from "date-fns";
 
+import { UserModel } from "../models/userModel";
 import { logErrorOnServer } from "../controllers";
 import ErrorLogModel from "../models/errorLogModel";
 import TransactionModel from "../models/transactionModel";
@@ -114,6 +117,58 @@ export const clearOldUserActivityLogsSchedule = cron.schedule(
         "Error processing old user activities logs scheduled for deletion."
       );
       logErrorOnServer("delete-old-logs-schedule", error);
+    }
+  },
+  {
+    timezone: "America/Sao_Paulo",
+  }
+);
+
+const userAndTransactionsBackup = cron.schedule(
+  "*/1 * * * * ",
+  // "0 0 * * * ",
+
+  async () => {
+    const today = new Date().toLocaleString("pt-BR", {
+      timeZone: "America/Sao_Paulo",
+    });
+
+    // Extract the date in "yyyy-mm-dd" format
+    const formattedDate = new Date(today).toISOString().split("T")[0]; // "yyyy-mm-dd"
+
+    console.log(formattedDate);
+
+    const backupFolder = path.join(__dirname, "../../../finance-backups");
+
+    console.log(`Starting user and transactions backups at:${backupFolder}`);
+
+    if (!fs.existsSync(backupFolder)) {
+      fs.mkdirSync(backupFolder, { recursive: true });
+    }
+
+    try {
+      const userDocs = await UserModel.find().select("+password").lean();
+      const transactionDocs = await TransactionModel.find().lean();
+
+      const userBackupFilePath = path.join(
+        backupFolder,
+        `users-${formattedDate}.json`
+      );
+      const transactionBackupFilePath = path.join(
+        backupFolder,
+        `transactions-${formattedDate}.json`
+      );
+
+      fs.writeFileSync(userBackupFilePath, JSON.stringify(userDocs, null, 2));
+      fs.writeFileSync(
+        transactionBackupFilePath,
+        JSON.stringify(transactionDocs, null, 2)
+      );
+
+      console.log(`User and transactions backup successful: ${backupFolder}`);
+    } catch (error) {
+      console.error("Error during user and transactions backup:", error);
+      logErrorOnServer("users-transactions-backup", error);
     }
   },
   {
