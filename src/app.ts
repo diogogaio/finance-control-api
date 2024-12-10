@@ -17,7 +17,7 @@ import transactionRouter from "./routes/transactionRouter";
 const app = express();
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  limit: 220, // Limit each IP to 100 requests
+  limit: 220, // Limit each IP to 220 requests
   statusCode: 429,
   message:
     "Too many server request for a certain period, please try again later...",
@@ -79,6 +79,11 @@ app.use("/finance-api/v1/payments", paymentsRouter);
 app.get("/finance-api/v1/ping", (req, res) => {
   res.status(200).json({ message: "pong" });
 });
+app.get("/", (req, res) => {
+  console.log("Received health check or crawlers probing request!");
+  res.status(200).json({ message: "Service is operational." });
+});
+
 app.all("*", (req, res, next) => {
   const err = new CustomError(
     `Can not find this URL on server: "${req.originalUrl}" `,
