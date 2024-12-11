@@ -21,7 +21,7 @@ const transactionRouter_1 = __importDefault(require("./routes/transactionRouter"
 const app = (0, express_1.default)();
 const limiter = (0, express_rate_limit_1.rateLimit)({
     windowMs: 15 * 60 * 1000,
-    limit: 220, // Limit each IP to 100 requests
+    limit: 220, // Limit each IP to 220 requests
     statusCode: 429,
     message: "Too many server request for a certain period, please try again later...",
 });
@@ -71,6 +71,10 @@ app.use("/finance-api/v1/payments", paymentsRouter_1.default);
 // Ping endpoint under /finance-api/v1/
 app.get("/finance-api/v1/ping", (req, res) => {
     res.status(200).json({ message: "pong" });
+});
+app.get("/", (req, res) => {
+    console.log("Received health check or crawlers probing request!");
+    res.status(200).json({ message: "Service is operational." });
 });
 app.all("*", (req, res, next) => {
     const err = new customError_1.default(`Can not find this URL on server: "${req.originalUrl}" `, 404);

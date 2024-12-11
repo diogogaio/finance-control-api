@@ -15,8 +15,6 @@ process.on("uncaughtException", async (err) => {
   process.exit(1);
 });
 
-console.log("PROCESS ENV: ", process.env.PORT, process.env.CONN_STR);
-
 const port = Number(process.env.PORT) || 3000;
 const server = app.listen(port, "0.0.0.0", () => {
   console.log(

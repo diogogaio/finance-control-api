@@ -3,9 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.clearOldUserActivityLogsSchedule = exports.clearOldErrorLogsSchedule = exports.recurrentTransactionsSchedule = void 0;
+exports.userAndTransactionsBackup = exports.clearOldUserActivityLogsSchedule = exports.clearOldErrorLogsSchedule = exports.recurrentTransactionsSchedule = void 0;
+const fs_1 = __importDefault(require("fs"));
+const path_1 = __importDefault(require("path"));
 const node_cron_1 = __importDefault(require("node-cron"));
 const date_fns_1 = require("date-fns");
+const userModel_1 = require("../models/userModel");
 const controllers_1 = require("../controllers");
 const errorLogModel_1 = __importDefault(require("../models/errorLogModel"));
 const transactionModel_1 = __importDefault(require("../models/transactionModel"));
@@ -91,6 +94,36 @@ exports.clearOldUserActivityLogsSchedule = node_cron_1.default.schedule("0 0 3 *
     catch (error) {
         console.log("Error processing old user activities logs scheduled for deletion.");
         (0, controllers_1.logErrorOnServer)("delete-old-logs-schedule", error);
+    }
+}, {
+    timezone: "America/Sao_Paulo",
+});
+exports.userAndTransactionsBackup = node_cron_1.default.schedule("*/1 * * * * ", 
+// "0 23 * * 1",
+async () => {
+    const today = new Date().toLocaleString("pt-BR", {
+        timeZone: "America/Sao_Paulo",
+    });
+    // Extract the date in "yyyy-mm-dd" format
+    const formattedDate = new Date(today).toISOString().split("T")[0]; // "yyyy-mm-dd"
+    console.log(formattedDate);
+    const backupFolder = path_1.default.join(__dirname, "../../../finance-backups");
+    console.log(`Starting user and transactions backups at:${backupFolder}`);
+    if (!fs_1.default.existsSync(backupFolder)) {
+        fs_1.default.mkdirSync(backupFolder, { recursive: true });
+    }
+    try {
+        const userDocs = await userModel_1.UserModel.find().select("+password").lean();
+        const transactionDocs = await transactionModel_1.default.find().lean();
+        const userBackupFilePath = path_1.default.join(backupFolder, `users-${formattedDate}.json`);
+        const transactionBackupFilePath = path_1.default.join(backupFolder, `transactions-${formattedDate}.json`);
+        fs_1.default.writeFileSync(userBackupFilePath, JSON.stringify(userDocs, null, 2));
+        fs_1.default.writeFileSync(transactionBackupFilePath, JSON.stringify(transactionDocs, null, 2));
+        console.log(`User and transactions backup successful: ${backupFolder}`);
+    }
+    catch (error) {
+        console.error("Error during user and transactions backup:", error);
+        (0, controllers_1.logErrorOnServer)("users-transactions-backup", error);
     }
 }, {
     timezone: "America/Sao_Paulo",
