@@ -125,8 +125,7 @@ export const clearOldUserActivityLogsSchedule = cron.schedule(
 );
 
 export const userAndTransactionsBackup = cron.schedule(
-  "*/1 * * * * ",
-  // "0 23 * * 1",
+  "0 23 * * 1",
 
   async () => {
     const today = new Date().toLocaleString("pt-BR", {

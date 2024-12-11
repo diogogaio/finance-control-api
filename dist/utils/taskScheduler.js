@@ -98,9 +98,7 @@ exports.clearOldUserActivityLogsSchedule = node_cron_1.default.schedule("0 0 3 *
 }, {
     timezone: "America/Sao_Paulo",
 });
-exports.userAndTransactionsBackup = node_cron_1.default.schedule("*/1 * * * * ", 
-// "0 23 * * 1",
-async () => {
+exports.userAndTransactionsBackup = node_cron_1.default.schedule("0 23 * * 1", async () => {
     const today = new Date().toLocaleString("pt-BR", {
         timeZone: "America/Sao_Paulo",
     });
