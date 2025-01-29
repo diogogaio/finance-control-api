@@ -13,6 +13,7 @@ class ApiFeatures<T> {
 
   constructor(
     query: Query<T[], T>,
+    // query: Query<T[], T>,
     queryParams: QueryParams,
     tenantId: string
   ) {
@@ -99,9 +100,9 @@ class ApiFeatures<T> {
   limitFields() {
     if (this.queryParams.fields) {
       const fields = (this.queryParams.fields as string).split(",").join(" ");
-      this.query = this.query.select(fields);
+      this.query = this.query.select(fields) as unknown as Query<T[], T>;
     } else {
-      this.query = this.query.select("-__v");
+      this.query = this.query.select("-__v") as unknown as Query<T[], T>;
     }
     return this;
   }
