@@ -1,13 +1,13 @@
 import express from "express";
-import {
+/* import {
   createCheckoutSession,
   sessionStatus,
-} from "../controllers/paymentController";
+} from "../controllers/paymentController"; */
 
 const paymentsRouter = express.Router();
 
-paymentsRouter.route("/createCheckoutSession").post(createCheckoutSession);
+/* paymentsRouter.route("/createCheckoutSession").post(createCheckoutSession);
 
-paymentsRouter.route("/sessionStatus").get(sessionStatus);
+paymentsRouter.route("/sessionStatus").get(sessionStatus); */
 
 export default paymentsRouter;
