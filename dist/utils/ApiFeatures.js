@@ -3,7 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const calculateTotals_1 = require("./calculateTotals");
 let transactionsCount;
 class ApiFeatures {
-    constructor(query, queryParams, tenantId) {
+    constructor(query, 
+    // query: Query<T[], T>,
+    queryParams, tenantId) {
         this.query = query;
         this.queryParams = queryParams;
         this.tenantId = tenantId;
